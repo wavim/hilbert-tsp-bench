@@ -19,7 +19,7 @@ function main() {
 }
 
 // Gray Code defining orthants' order
-const grayCode = (n) => [...Array(2 ** n).keys()].map((bit) => bit ^ (bit >> 1));
+const grayCode = (n) => [...Array(2 << n).keys()].map((bit) => bit ^ (bit >> 1));
 const GRAY_2 = grayCode(2);
 
 async function h2CurveSort(vec2s) {
