@@ -1,3 +1,23 @@
+function main() {
+	const fs = require("fs");
+	fs.readFile("pla85900.tsp", async (err, data) => {
+		if (err) throw err;
+
+		const pla85900 = data.toString();
+		const lines = pla85900.split("\n");
+		const coords = [];
+		for (let i = 6; i < lines.length - 1; i++) coords.push(lines[i].split(/\s+/).slice(1).map(Number));
+
+		let sorted = await h2CurveSort(coords);
+		sorted.push(sorted[0]);
+
+		let dist = 0;
+		for (let i = 0; i < sorted.length - 1; i++) dist += calcDist(sorted[i], sorted[i + 1], Math.ceil);
+		console.log(`hilbert curve dist: ${dist}, ${dist / 142382641} times optimal`);
+		// hilbert curve dist: 188465250, 1.3236532815822681 times optimal
+	});
+}
+
 // Gray Code defining orthants' order
 const grayCode = (n) => [...Array(2 ** n).keys()].map((bit) => bit ^ (bit >> 1));
 const GRAY_2 = grayCode(2);
@@ -65,26 +85,6 @@ async function _h2CurveSort(vec2s, side) {
 
 function calcDist([x1, y1], [x2, y2], round) {
 	return round(Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2));
-}
-
-function main() {
-	const fs = require("fs");
-	fs.readFile("pla85900.tsp", async (err, data) => {
-		if (err) throw err;
-
-		const pla85900 = data.toString();
-		const lines = pla85900.split("\n");
-		const coords = [];
-		for (let i = 6; i < lines.length - 1; i++) coords.push(lines[i].split(/\s+/).slice(1).map(Number));
-
-		let sorted = await h2CurveSort(coords);
-		sorted.push(sorted[0]);
-
-		let dist = 0;
-		for (let i = 0; i < sorted.length - 1; i++) dist += calcDist(sorted[i], sorted[i + 1], Math.ceil);
-		console.log(`hilbert curve dist: ${dist}, ${dist / 142382641} times optimal`);
-		// hilbert curve dist: 188465250, 1.3236532815822681 times optimal
-	});
 }
 
 main();
