@@ -66,7 +66,7 @@ async function _h2CurveSort(vec2s, side) {
 		0b10: ([x, y]) => [side - y, mid - x],
 	};
 
-	const quads = [...Array(4)].map(() => []);
+	const quads = [[], [], [], []];
 	for (const vec2 of vec2s) {
 		const bitX = vec2[0] > mid;
 		const bitY = vec2[1] > mid;
