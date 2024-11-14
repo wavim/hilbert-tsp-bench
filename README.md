@@ -6,16 +6,14 @@ h2CurveSort, a fast algorithm that is not designed for TSP problems,
 achieved a distance of $188465250$ (CEIL_2D), only a rough $\times 1.32$ of the Mathematically optimal distance $142382641$ (CEIL_2D).
 That might seem quite bad, but many dedicated approximation algorithms do no better, yet this algorithm is more efficient.
 
-The major flaw, is that TSP asks for a _cycle_, not a simple tour.
-Hilbert Sort will not minimize the distance between the first and the last node.
-This will add an overhead to the resultant distance, which is usually relatively high.
+The major flaw of using Hilbert Curve Sort, is that TSP asks for a _cycle_, not a simple tour.
+Hilbert Curve Sort will not minimize the distance between the first and the last node.
+This will add an overhead to the resultant distance, which is usually relatively large (this is apparent as shown in the next section).
 
 #### Tour Visualization
 
 _Optimal Tour_
 ![Optimal Tour](assets/pla85900_optimal.png)
 
-_Hilbert Curve Sort Tour_
+_Hilbert Curve Tour_
 ![Hilbert Curve Tour](assets/pla85900_hilbert_curve.png)
-
-> The tours' path do not return to the initial node.
