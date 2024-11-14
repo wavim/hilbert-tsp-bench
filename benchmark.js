@@ -83,7 +83,7 @@ function main() {
 		let dist = 0;
 		for (let i = 0; i < sorted.length - 1; i++) dist += calcDist(sorted[i], sorted[i + 1], Math.ceil);
 		console.log(`hilbert curve dist: ${dist}, ${dist / 142382641} times optimal`);
-        // hilbert curve dist: 188465250, 1.3236532815822681 times optimal
+		// hilbert curve dist: 188465250, 1.3236532815822681 times optimal
 	});
 }
 
