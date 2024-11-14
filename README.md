@@ -11,9 +11,7 @@ That might seem quite bad, but many dedicated approximation algorithms do no bet
 _Optimal Tour_
 ![Optimal Tour](assets/pla85900_optimal.png)
 
-<br>
-
 _Hilbert Curve Sort Tour_
 ![Hilbert Curve Tour](assets/pla85900_hilbert_curve.png)
 
-> The tour images' path do not return to initial node.
+> The tours' path do not return to the initial node.
