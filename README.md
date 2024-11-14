@@ -4,12 +4,16 @@ Particularly, the famous [pla85900.tsp](pla85900.tsp) set containing 85900 nodes
 The result is quite fascinating to me.
 h2CurveSort, a fast algorithm that is not designed for TSP problems,
 achieved a distance of $188465250$ (CEIL_2D), only a rough $\times 1.32$ of the Mathematically optimal distance $142382641$ (CEIL_2D).
-That might seem quite bad, but many dedicated approximation algorithms do no better.
+That might seem quite bad, but many dedicated approximation algorithms do no better, yet this algorithm is more efficient.
 
-![Optimal Tour](assets/pla85900_optimal.png)
+#### Tour Visualization
+
 _Optimal Tour_
+![Optimal Tour](assets/pla85900_optimal.png)
 
-![Hilbert Curve Tour](assets/pla85900_hilbert_curve.png)
+<br>
+
 _Hilbert Curve Sort Tour_
+![Hilbert Curve Tour](assets/pla85900_hilbert_curve.png)
 
-> The tour images' path do not return to initial node
+> The tour images' path do not return to initial node.
