@@ -1,1 +1,5 @@
-# tsp-hilbert-curve-benchmark
+A simple benchmark on how well the [Hilbert Curve Sort](https://github.com/CarbonicSoda/hilbert-curve-sort) performs on the TSPLIB dataset.
+Particularly, the famous [pla85900.tsp](pla85900.tsp) set containing 85900 nodes.
+
+The result is quite fascinating to me.
+h2CurveSort, a fast algorithm that is not designed for TSP problems, achieved a distance of $188465250$ (CEIL_2D), only a rough $\times 1.32$ of the Mathematically optimal distance $142382641$ (CEIL_2D).
