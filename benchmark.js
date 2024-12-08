@@ -6,20 +6,28 @@ function main() {
 		const pla85900 = data.toString();
 		const lines = pla85900.split("\n");
 		const coords = [];
-		for (let i = 6; i < lines.length - 1; i++) coords.push(lines[i].split(/\s+/).slice(1).map(Number));
+		for (let i = 6; i < lines.length - 1; i++)
+			coords.push(lines[i].split(/\s+/).slice(1).map(Number));
 
+		const start = performance.now();
 		let sorted = await h2CurveSort(coords);
+		console.log(`computation completed in ${performance.now() - start}`);
 		sorted.push(sorted[0]);
 
 		let dist = 0;
-		for (let i = 0; i < sorted.length - 1; i++) dist += calcDist(sorted[i], sorted[i + 1], Math.ceil);
-		console.log(`hilbert curve dist: ${dist}, ${dist / 142382641} times optimal`);
+		for (let i = 0; i < sorted.length - 1; i++) {
+			dist += calcDist(sorted[i], sorted[i + 1], Math.ceil);
+		}
+		console.log(
+			`hilbert curve dist: ${dist}, ${dist / 142382641}x optimal`,
+		);
 		// hilbert curve dist: 188465250, 1.3236532815822681 times optimal
 	});
 }
 
 // Gray Code defining orthants' order
-const grayCode = (n) => [...Array(1 << n).keys()].map((bit) => bit ^ (bit >> 1));
+const grayCode = (n) =>
+	[...Array(1 << n).keys()].map((bit) => bit ^ (bit >> 1));
 const GRAY_2 = grayCode(2);
 
 async function h2CurveSort(vec2s) {
@@ -40,10 +48,16 @@ async function h2CurveSort(vec2s) {
 	let scaleY = maxSide / sideY;
 	if (scaleX === 0 || !Number.isFinite(scaleX)) scaleX = 1;
 	if (scaleY === 0 || !Number.isFinite(scaleY)) scaleY = 1;
-	const normVec2s = vec2s.map(([x, y]) => [scaleX * (x - minX), scaleY * (y - minY)]);
+	const normVec2s = vec2s.map(([x, y]) => [
+		scaleX * (x - minX),
+		scaleY * (y - minY),
+	]);
 
 	// De-scaling and de-centering the results from actual sort
-	return (await _h2CurveSort(normVec2s, maxSide)).map(([x, y]) => [x / scaleX + minX, y / scaleY + minY]);
+	return (await _h2CurveSort(normVec2s, maxSide)).map(([x, y]) => [
+		x / scaleX + minX,
+		y / scaleY + minY,
+	]);
 }
 
 async function _h2CurveSort(vec2s, side) {
@@ -77,7 +91,10 @@ async function _h2CurveSort(vec2s, side) {
 
 	// Transform quadrants to U_2(1)
 	const sorted = await Promise.all(
-		quads.map(async (quadVec2s, quad) => await _h2CurveSort(quadVec2s.map(maps[quad]), mid)),
+		quads.map(
+			async (quadVec2s, quad) =>
+				await _h2CurveSort(quadVec2s.map(maps[quad]), mid),
+		),
 	);
 	// Order quadrants w.r.t G_2 and de-transform
 	return GRAY_2.flatMap((quad) => sorted[quad].map(inverseMaps[quad]));
