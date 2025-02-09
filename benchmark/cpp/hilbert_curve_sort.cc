@@ -3,6 +3,7 @@
 
 #include "hilbert_curve_sort.h"
 
+void HilbertCurveSort2D(vector<array<double, 2>> &vec2s);
 void RunHilbertCurveSort2D(vector<array<double, 2>> &vec2s, const double kSide);
 bool IsBaseHilbertCurveSort2D(const vector<array<double, 2>> &kVec2s);
 
