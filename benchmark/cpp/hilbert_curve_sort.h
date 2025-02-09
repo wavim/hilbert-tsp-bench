@@ -12,8 +12,6 @@
 #include <utility>
 #include <vector>
 
-using namespace std;
-
-void HilbertCurveSort2D(vector<array<double, 2>> &vec2s);
+void HilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s);
 
 #endif
