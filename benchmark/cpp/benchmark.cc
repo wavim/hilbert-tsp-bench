@@ -43,4 +43,5 @@ int main(void) {
   cout << "Sorted in: " << duration.count() << "ms. Dist: " << (int)dist << ", "
        << dist / 142382641 << "x optimal.";
   // Sorted in: (~100ms). Dist: 188465250, 1.32365x optimal.
+  // 11th Gen Intel(R) Core(TM) i5-11320H
 }

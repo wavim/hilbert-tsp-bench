@@ -27,6 +27,7 @@ function main() {
 		}
 		console.log(`Sorted in ${duration}ms. Dist: ${dist}, ${dist / 142382641}x optimal.`);
 		// Sorted in (~400ms). Dist: 188465250, 1.3236532815822681x optimal.
+		// 11th Gen Intel(R) Core(TM) i5-11320H
 	});
 }
 
