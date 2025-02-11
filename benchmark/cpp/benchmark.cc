@@ -7,8 +7,8 @@
 
 #include "hilbert_curve_sort.cc"
 
-double calcDist(const std::array<double, 2>& point1,
-                const std::array<double, 2>& point2) {
+uint32_t calcDist(const std::array<double, 2>& point1,
+                  const std::array<double, 2>& point2) {
   double x1 = point1[0];
   double y1 = point1[1];
   double x2 = point2[0];
@@ -34,13 +34,13 @@ int main(void) {
   auto duration =
       std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-  double dist = 0;
-  for (int i = 0; i < points.size(); i++) {
+  uint32_t dist = 0;
+  for (size_t i = 0; i < points.size(); i++) {
     dist += calcDist(points[i], points[(i + 1) % points.size()]);
   }
 
-  std::cout << "Sorted in: " << duration.count() << "ms. Dist: " << (int)dist
-            << ", " << dist / 142382641 << "x optimal.";
+  std::cout << "Sorted in: " << duration.count() << "ms. Dist: " << dist << ", "
+            << (double)dist / 142382641 << "x optimal.";
   // Sorted in: (~100ms). Dist: 188465250, 1.32365x optimal.
   // 11th Gen Intel(R) Core(TM) i5-11320H
 }
