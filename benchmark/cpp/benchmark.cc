@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "hilbert_curve_sort.cc"
+#include "hilbert_curve_sort.h"
 
 uint32_t calcDist(const std::array<double, 2>& point1,
                   const std::array<double, 2>& point2) {
@@ -22,9 +22,9 @@ int main(void) {
   std::vector<std::array<double, 2>> points;
   while (getline(pla85900, line)) {
     std::istringstream lineStream(line);
-    int index;
+    int i;
     double x, y;
-    if (lineStream >> index >> x >> y) points.push_back({x, y});
+    if (lineStream >> i >> x >> y) points.push_back({x, y});
   }
   pla85900.close();
 

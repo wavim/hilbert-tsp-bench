@@ -14,4 +14,6 @@
 
 void HilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s);
 
+#include "hilbert_curve_sort.cc"
+
 #endif
