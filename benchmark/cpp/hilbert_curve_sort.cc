@@ -3,118 +3,139 @@
 
 #include "hilbert_curve_sort.h"
 
-void HilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s);
-void RunHilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s,
-                           const double kSide);
-bool IsBaseHilbertCurveSort2D(const std::vector<std::array<double, 2>> &kVec2s);
+#include <cstdint>
+#include <functional>
+#include <iterator>
+#include <limits>
+#include <set>
 
-const auto kGrayCode = [](const uint8_t n) {
-  std::vector<uint8_t> result;
+void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, double side);
+auto is_base_2d(const std::vector<std::array<double, 2>> &vec2s) -> bool;
+
+void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
+  double min_x = std::numeric_limits<double>::max();
+  double max_x = std::numeric_limits<double>::lowest();
+  double min_y = std::numeric_limits<double>::max();
+  double max_y = std::numeric_limits<double>::lowest();
+
+  for (const auto &vec2 : vec2s) {
+    min_x = std::min(min_x, vec2[0]);
+    max_x = std::max(max_x, vec2[0]);
+    min_y = std::min(min_y, vec2[1]);
+    max_y = std::max(max_y, vec2[1]);
+  }
+
+  const double side_x = max_x - min_x;
+  const double side_y = max_y - min_y;
+  const double bound = std::max(side_x, side_y);
+
+  const double scale_x = (side_x == 0 || bound == 0) ? 1 : bound / side_x;
+  const double scale_y = (side_y == 0 || bound == 0) ? 1 : bound / side_y;
+
+  for (auto &vec2 : vec2s) {
+    vec2[0] = scale_x * (vec2[0] - min_x);
+    vec2[1] = scale_y * (vec2[1] - min_y);
+  }
+
+  run_sort_2d(vec2s, bound);
+
+  for (auto &vec2 : vec2s) {
+    vec2[0] = vec2[0] / scale_x + min_x;
+    vec2[1] = vec2[1] / scale_y + min_y;
+  }
+};
+
+auto gray(const uint8_t n) {
+  std::vector<uint8_t> code;
+
   for (uint8_t bit = 0; bit < (1 << n); bit++) {
-    result.push_back(bit ^ (bit >> 1));
-  }
-  return result;
-};
-const std::vector<uint8_t> kGrayCode2 = kGrayCode(2);
-
-void HilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s) {
-  double minX = std::numeric_limits<double>::max();
-  double maxX = std::numeric_limits<double>::lowest();
-  double minY = std::numeric_limits<double>::max();
-  double maxY = std::numeric_limits<double>::lowest();
-
-  for (const auto &kVec2 : vec2s) {
-    minX = std::min(minX, kVec2[0]);
-    maxX = std::max(maxX, kVec2[0]);
-    minY = std::min(minY, kVec2[1]);
-    maxY = std::max(maxY, kVec2[1]);
+    code.push_back(bit ^ (bit >> 1));
   }
 
-  const double kSideX = maxX - minX;
-  const double kSideY = maxY - minY;
-  const double kMaxSide = std::max(kSideX, kSideY);
-
-  const double kScaleX = (kSideX == 0 || kMaxSide == 0) ? 1 : kMaxSide / kSideX;
-  const double kScaleY = (kSideY == 0 || kMaxSide == 0) ? 1 : kMaxSide / kSideY;
-
-  for (auto &vec2 : vec2s) {
-    vec2[0] = kScaleX * (vec2[0] - minX);
-    vec2[1] = kScaleY * (vec2[1] - minY);
-  }
-
-  RunHilbertCurveSort2D(vec2s, kMaxSide);
-
-  for (auto &vec2 : vec2s) {
-    vec2[0] = vec2[0] / kScaleX + minX;
-    vec2[1] = vec2[1] / kScaleY + minY;
-  }
+  return code;
 };
 
-void RunHilbertCurveSort2D(std::vector<std::array<double, 2>> &vec2s,
-                           const double kSide) {
-  if (IsBaseHilbertCurveSort2D(vec2s)) return;
+void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
+  if (is_base_2d(vec2s)) {
+    return;
+  }
 
-  const double kMid = kSide / 2;
+  const double mid = side / 2;
 
   std::array<std::function<void(std::array<double, 2> &)>, 4> maps;
-  maps[0b00] = [](std::array<double, 2> &vec2) { vec2 = {vec2[1], vec2[0]}; };
-  maps[0b01] = [kMid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0], vec2[1] - kMid};
-  };
-  maps[0b11] = [kMid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0] - kMid, vec2[1] - kMid};
-  };
-  maps[0b10] = [kSide, kMid](std::array<double, 2> &vec2) {
-    vec2 = {kMid - vec2[1], kSide - vec2[0]};
-  };
 
-  std::array<std::function<void(std::array<double, 2> &)>, 4> invMaps;
-  invMaps[0b00] = [](std::array<double, 2> &vec2) {
+  maps[0b00] = [](std::array<double, 2> &vec2) {
     vec2 = {vec2[1], vec2[0]};
   };
-  invMaps[0b01] = [kMid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0], vec2[1] + kMid};
+  maps[0b01] = [mid](std::array<double, 2> &vec2) {
+    vec2 = {vec2[0], vec2[1] - mid};
   };
-  invMaps[0b11] = [kMid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0] + kMid, vec2[1] + kMid};
+  maps[0b11] = [mid](std::array<double, 2> &vec2) {
+    vec2 = {vec2[0] - mid, vec2[1] - mid};
   };
-  invMaps[0b10] = [kSide, kMid](std::array<double, 2> &vec2) {
-    vec2 = {kSide - vec2[1], kMid - vec2[0]};
+  maps[0b10] = [side, mid](std::array<double, 2> &vec2) {
+    vec2 = {mid - vec2[1], side - vec2[0]};
   };
 
-  std::array<std::vector<std::array<double, 2>>, 4> quads = {
+  std::array<std::function<void(std::array<double, 2> &)>, 4> invs;
+
+  invs[0b00] = [](std::array<double, 2> &vec2) {
+    vec2 = {vec2[1], vec2[0]};
+  };
+  invs[0b01] = [mid](std::array<double, 2> &vec2) {
+    vec2 = {vec2[0], vec2[1] + mid};
+  };
+  invs[0b11] = [mid](std::array<double, 2> &vec2) {
+    vec2 = {vec2[0] + mid, vec2[1] + mid};
+  };
+  invs[0b10] = [side, mid](std::array<double, 2> &vec2) {
+    vec2 = {side - vec2[1], mid - vec2[0]};
+  };
+
+  std::array quads = {
       std::vector<std::array<double, 2>>{},
       std::vector<std::array<double, 2>>{},
       std::vector<std::array<double, 2>>{},
-      std::vector<std::array<double, 2>>{}};
+      std::vector<std::array<double, 2>>{}
+  };
 
   for (auto &vec2 : vec2s) {
-    const bool kBitX = vec2[0] > kMid;
-    const bool kBitY = vec2[1] > kMid;
-    const char kQuad = (kBitX << 1) + kBitY;
+    const bool bit_x = vec2[0] > mid;
+    const bool bit_y = vec2[1] > mid;
 
-    maps[kQuad](vec2);
-    quads[kQuad].push_back(std::move(vec2));
+    const uint8_t quad = (static_cast<int>(bit_x) << 1) +
+                         static_cast<int>(bit_y);
+
+    maps[quad](vec2);
+    quads[quad].push_back(vec2);
   }
 
-  for (auto &vec2s : quads) RunHilbertCurveSort2D(vec2s, kMid);
+  for (auto &quad_vec2s : quads) {
+    run_sort_2d(quad_vec2s, mid);
+  }
 
   std::vector<std::array<double, 2>> result;
 
-  for (const auto &kQuad : kGrayCode2) {
-    for (auto &vec2 : quads[kQuad]) invMaps[kQuad](vec2);
+  for (const auto &quad : gray(2)) {
+    for (auto &vec2 : quads[quad]) {
+      invs[quad](vec2);
+    }
 
-    result.insert(result.end(), make_move_iterator(quads[kQuad].begin()),
-                  make_move_iterator(quads[kQuad].end()));
+    result.insert(result.end(),
+                  make_move_iterator(quads[quad].begin()),
+                  make_move_iterator(quads[quad].end()));
   }
 
   vec2s = result;
 }
 
-bool IsBaseHilbertCurveSort2D(
-    const std::vector<std::array<double, 2>> &kVec2s) {
-  if (kVec2s.size() < 2) return true;
-  const std::set<std::array<double, 2>> kUniqueVec2s(
-      make_move_iterator(kVec2s.begin()), make_move_iterator(kVec2s.end()));
-  return kUniqueVec2s.size() == 1;
+auto is_base_2d(const std::vector<std::array<double, 2>> &vec2s) -> bool {
+  if (vec2s.size() < 2) {
+    return true;
+  }
+
+  const std::set unique_vec2s(
+      make_move_iterator(vec2s.begin()), make_move_iterator(vec2s.end()));
+
+  return unique_vec2s.size() == 1;
 }

@@ -1,1 +1,0 @@
-g++ -O3 -ffast-math -funsafe-math-optimizations -fno-strict-aliasing -march=native -o benchmark benchmark.cc

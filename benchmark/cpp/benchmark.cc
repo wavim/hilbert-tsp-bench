@@ -7,40 +7,59 @@
 
 #include "hilbert_curve_sort.h"
 
-uint32_t calcDist(const std::array<double, 2>& point1,
-                  const std::array<double, 2>& point2) {
-  double x1 = point1[0];
-  double y1 = point1[1];
-  double x2 = point2[0];
-  double y2 = point2[1];
-  return ceil(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+auto calc_dist(const std::array<double, 2> &point1,
+               const std::array<double, 2> &point2) -> double {
+  const double x_1 = point1[0];
+  const double y_1 = point1[1];
+  const double x_2 = point2[0];
+  const double y_2 = point2[1];
+
+  return ceil(sqrt(((x_1 - x_2) * (x_1 - x_2)) + ((y_1 - y_2) * (y_1 - y_2))));
 }
 
-int main(void) {
-  std::ifstream pla85900("../../pla85900.tsp");
-  std::string line;
+auto main() -> int {
   std::vector<std::array<double, 2>> points;
-  while (getline(pla85900, line)) {
+
+  std::ifstream pla85900("../../../pla85900.tsp");
+  std::string line;
+
+  while (std::getline(pla85900, line)) {
     std::istringstream lineStream(line);
-    int i;
-    double x, y;
-    if (lineStream >> i >> x >> y) points.push_back({x, y});
+
+    double x_coord;
+    double y_coord;
+
+    if (int index; lineStream >> index >> x_coord >> y_coord) {
+      points.push_back({x_coord, y_coord});
+    }
   }
+
   pla85900.close();
 
   auto start = std::chrono::high_resolution_clock::now();
-  HilbertCurveSort2D(points);
-  auto stop = std::chrono::high_resolution_clock::now();
-  auto duration =
-      std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
-  uint32_t dist = 0;
-  for (size_t i = 0; i < points.size(); i++) {
-    dist += calcDist(points[i], points[(i + 1) % points.size()]);
+  sort_2d(points);
+
+  auto stop = std::chrono::high_resolution_clock::now();
+
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+      stop - start).count();
+
+  double dist = 0;
+
+  for (size_t i = 0; i < points.size() - 1; i++) {
+    dist += calc_dist(points[i], points[i + 1]);
   }
 
-  std::cout << "Sorted in: " << duration.count() << "ms. Dist: " << dist << ", "
-            << (double)dist / 142382641 << "x optimal.";
-  // Sorted in: (~100ms). Dist: 188465250, 1.32365x optimal.
-  // 11th Gen Intel(R) Core(TM) i5-11320H
+  dist += calc_dist(points[points.size() - 1], points[0]);
+
+  std::cout
+      << "time: " << duration << ".\n"
+      << "dist: " << static_cast<unsigned>(dist) << ".\n"
+      << "mult: " << std::fixed << dist / 142382641 << ".\n";
+
+  // time: 120.
+  // dist: 188465250.
+  // mult: 1.323653.
+  // 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz
 }
