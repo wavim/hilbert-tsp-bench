@@ -54,7 +54,7 @@ void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
 
   const double mid = side / 2;
 
-  const std::array<std::function<void(std::array<double, 2> &)>, 4> maps = {
+  const std::array<std::function<void(std::array<double, 2> &)>, 4> maps{
       [](auto &vec2) { vec2 = {vec2[1], vec2[0]}; },
       [mid](auto &vec2) { vec2 = {vec2[0], vec2[1] - mid}; },
       [side, mid](auto &vec2) { vec2 = {mid - vec2[1], side - vec2[0]}; },
@@ -82,7 +82,7 @@ void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
 
   std::vector<std::array<double, 2>> result;
 
-  const std::array<std::function<void(std::array<double, 2> &)>, 4> invs = {
+  const std::array<std::function<void(std::array<double, 2> &)>, 4> invs{
       [](auto &vec2) { vec2 = {vec2[1], vec2[0]}; },
       [mid](auto &vec2) { vec2 = {vec2[0], vec2[1] + mid}; },
       [side, mid](auto &vec2) { vec2 = {side - vec2[1], mid - vec2[0]}; },
