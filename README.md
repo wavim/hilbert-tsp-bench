@@ -26,3 +26,11 @@ adding an overhead to the resultant distance, but is usually minor.
 #### Hilbert Curve
 
 ![Hilbert Curve](assets/pla85900_hilbert_curve.png)
+
+### Limitations
+
+Apart from the cycle-tour business that is neglectable, there are some serious drawbacks of the
+algorithm. In particular, it only worked so well on pla85900 because the points are fairly uniform
+in a square-ish region. For oher clusters of different shape and distribution, the algorithm could
+give terrible results. But if we know that a dataset have certain preferable properties prior, the
+algorithm could achieve amazing performance and ratio.
