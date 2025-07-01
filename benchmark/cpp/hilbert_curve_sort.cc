@@ -11,19 +11,18 @@
 void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, double side);
 auto is_base_2d(const std::vector<std::array<double, 2>> &vec2s) -> bool;
 
-constexpr auto proj_x = [](const auto &vec) { return vec[0]; };
-constexpr auto proj_y = [](const auto &vec) { return vec[1]; };
+constexpr std::array<uint8_t, 4> gray2 = {0b00, 0b01, 0b11, 0b10};
 
 void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
-  const auto [min_x_it, max_x_it] =
-      std::ranges::minmax_element(vec2s, {}, proj_x);
-  const double min_x = proj_x(*min_x_it);
-  const double max_x = proj_x(*max_x_it);
+  const auto [min_x_it, max_x_it] = std::ranges::minmax_element(
+      vec2s, {}, [](const auto &vec) { return vec[0]; });
+  const double min_x = (*min_x_it)[0];
+  const double max_x = (*max_x_it)[0];
 
-  const auto [min_y_it, max_y_it] =
-      std::ranges::minmax_element(vec2s, {}, proj_y);
-  const double min_y = proj_y(*min_y_it);
-  const double max_y = proj_y(*max_y_it);
+  const auto [min_y_it, max_y_it] = std::ranges::minmax_element(
+      vec2s, {}, [](const auto &vec) { return vec[1]; });
+  const double min_y = (*min_y_it)[1];
+  const double max_y = (*max_y_it)[1];
 
   const double side_x = max_x - min_x;
   const double side_y = max_y - min_y;
@@ -44,8 +43,6 @@ void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
     vec2[1] = vec2[1] / scale_y + min_y;
   }
 };
-
-constexpr std::array<uint8_t, 4> gray2 = {0b00, 0b01, 0b11, 0b10};
 
 void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
   if (is_base_2d(vec2s)) {
