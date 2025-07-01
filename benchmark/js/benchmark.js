@@ -34,7 +34,7 @@ console.log("time:", duration);
 console.log("dist:", dist);
 console.log("mult:", (dist / 142382641).toFixed(6));
 
-// time: 170.
+// time: 150.
 // dist: 188465250.
 // mult: 1.323653.
 // 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz

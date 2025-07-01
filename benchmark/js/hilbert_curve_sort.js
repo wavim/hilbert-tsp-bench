@@ -1,3 +1,6 @@
+// Gray Code defining orthants' order
+const gray2 = [0b00, 0b01, 0b11, 0b10];
+
 function minmax(vecs, i) {
 	let min = Infinity;
 	let max = -Infinity;
@@ -36,11 +39,6 @@ export function sort2D(vec2s) {
 	return runSort2D(fitted, bound).map(([x, y]) => [x / scalex + minx, y / scaley + miny]);
 }
 
-// Gray Code defining orthants' order
-function gray(n) {
-	return [...Array(1 << n).keys()].map((bit) => bit ^ (bit >> 1));
-}
-
 function runSort2D(vec2s, side) {
 	if (isBase2D(vec2s)) {
 		return vec2s;
@@ -77,7 +75,7 @@ function runSort2D(vec2s, side) {
 	const sorted = quads.map((vec2s, quad) => runSort2D(vec2s.map(maps[quad]), mid));
 
 	// Order quadrants w.r.t G_2 and inv-transform
-	return gray(2).flatMap((quad) => sorted[quad].map(invs[quad]));
+	return gray2.flatMap((quad) => sorted[quad].map(invs[quad]));
 }
 
 function isBase2D(vec2s) {
