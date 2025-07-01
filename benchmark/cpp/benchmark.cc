@@ -58,7 +58,7 @@ auto main() -> int {
             << "dist: " << static_cast<unsigned>(dist) << ".\n"
             << "mult: " << std::fixed << dist / 142382641 << ".\n";
 
-  // time: 35.
+  // time: 30.
   // dist: 188465250.
   // mult: 1.323653.
   // 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz

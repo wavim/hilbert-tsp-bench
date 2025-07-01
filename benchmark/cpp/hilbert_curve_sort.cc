@@ -3,26 +3,27 @@
 
 #include "hilbert_curve_sort.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <functional>
 #include <iterator>
-#include <limits>
 
 void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, double side);
 auto is_base_2d(const std::vector<std::array<double, 2>> &vec2s) -> bool;
 
-void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
-  double min_x = std::numeric_limits<double>::max();
-  double max_x = std::numeric_limits<double>::lowest();
-  double min_y = std::numeric_limits<double>::max();
-  double max_y = std::numeric_limits<double>::lowest();
+constexpr auto proj_x = [](const auto &vec) { return vec[0]; };
+constexpr auto proj_y = [](const auto &vec) { return vec[1]; };
 
-  for (const auto &vec2 : vec2s) {
-    min_x = std::min(min_x, vec2[0]);
-    max_x = std::max(max_x, vec2[0]);
-    min_y = std::min(min_y, vec2[1]);
-    max_y = std::max(max_y, vec2[1]);
-  }
+void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
+  const auto [min_x_it, max_x_it] =
+      std::ranges::minmax_element(vec2s, {}, proj_x);
+  const double min_x = proj_x(*min_x_it);
+  const double max_x = proj_x(*max_x_it);
+
+  const auto [min_y_it, max_y_it] =
+      std::ranges::minmax_element(vec2s, {}, proj_y);
+  const double min_y = proj_y(*min_y_it);
+  const double max_y = proj_y(*max_y_it);
 
   const double side_x = max_x - min_x;
   const double side_y = max_y - min_y;
@@ -44,15 +45,7 @@ void sort_2d(std::vector<std::array<double, 2>> &vec2s) {
   }
 };
 
-auto gray(const uint8_t n) {
-  std::vector<uint8_t> code;
-
-  for (uint8_t bit = 0; bit < (1 << n); bit++) {
-    code.push_back(bit ^ (bit >> 1));
-  }
-
-  return code;
-};
+constexpr std::array<uint8_t, 4> gray2 = {0b00, 0b01, 0b11, 0b10};
 
 void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
   if (is_base_2d(vec2s)) {
@@ -61,31 +54,11 @@ void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
 
   const double mid = side / 2;
 
-  std::array<std::function<void(std::array<double, 2> &)>, 4> maps;
-
-  maps[0b00] = [](std::array<double, 2> &vec2) { vec2 = {vec2[1], vec2[0]}; };
-  maps[0b01] = [mid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0], vec2[1] - mid};
-  };
-  maps[0b11] = [mid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0] - mid, vec2[1] - mid};
-  };
-  maps[0b10] = [side, mid](std::array<double, 2> &vec2) {
-    vec2 = {mid - vec2[1], side - vec2[0]};
-  };
-
-  std::array<std::function<void(std::array<double, 2> &)>, 4> invs;
-
-  invs[0b00] = [](std::array<double, 2> &vec2) { vec2 = {vec2[1], vec2[0]}; };
-  invs[0b01] = [mid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0], vec2[1] + mid};
-  };
-  invs[0b11] = [mid](std::array<double, 2> &vec2) {
-    vec2 = {vec2[0] + mid, vec2[1] + mid};
-  };
-  invs[0b10] = [side, mid](std::array<double, 2> &vec2) {
-    vec2 = {side - vec2[1], mid - vec2[0]};
-  };
+  const std::array<std::function<void(std::array<double, 2> &)>, 4> maps = {
+      [](auto &vec2) { vec2 = {vec2[1], vec2[0]}; },
+      [mid](auto &vec2) { vec2 = {vec2[0], vec2[1] - mid}; },
+      [side, mid](auto &vec2) { vec2 = {mid - vec2[1], side - vec2[0]}; },
+      [mid](auto &vec2) { vec2 = {vec2[0] - mid, vec2[1] - mid}; }};
 
   std::array quads = {std::vector<std::array<double, 2>>{},
                       std::vector<std::array<double, 2>>{},
@@ -109,7 +82,13 @@ void run_sort_2d(std::vector<std::array<double, 2>> &vec2s, const double side) {
 
   std::vector<std::array<double, 2>> result;
 
-  for (const auto &quad : gray(2)) {
+  const std::array<std::function<void(std::array<double, 2> &)>, 4> invs = {
+      [](auto &vec2) { vec2 = {vec2[1], vec2[0]}; },
+      [mid](auto &vec2) { vec2 = {vec2[0], vec2[1] + mid}; },
+      [side, mid](auto &vec2) { vec2 = {side - vec2[1], mid - vec2[0]}; },
+      [mid](auto &vec2) { vec2 = {vec2[0] + mid, vec2[1] + mid}; }};
+
+  for (const auto quad : gray2) {
     for (auto &vec2 : quads[quad]) {
       invs[quad](vec2);
     }

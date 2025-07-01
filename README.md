@@ -10,7 +10,7 @@ achieved a distance of 188465250, only a rough x1.32 of the mathematically optim
 distance 142382641.
 
 That might seem to be terrible, but many dedicated approximation algorithms do no better. This
-algorithm is also more efficient and is able to complete sorting in ~35ms on my 11th Gen Intel(R)
+algorithm is also more efficient and is able to complete sorting in ~30ms on my 11th Gen Intel(R)
 Core(TM) i5-11320H @ 3.20GHz laptop (C++ version).
 
 A slight flaw of using the algorithm to approximate TSP solutions is that TSP asks for a _cycle_,
