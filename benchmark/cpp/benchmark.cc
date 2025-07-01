@@ -42,8 +42,9 @@ auto main() -> int {
 
   auto stop = std::chrono::high_resolution_clock::now();
 
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-      stop - start).count();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(stop - start)
+          .count();
 
   double dist = 0;
 
@@ -53,12 +54,11 @@ auto main() -> int {
 
   dist += calc_dist(points[points.size() - 1], points[0]);
 
-  std::cout
-      << "time: " << duration << ".\n"
-      << "dist: " << static_cast<unsigned>(dist) << ".\n"
-      << "mult: " << std::fixed << dist / 142382641 << ".\n";
+  std::cout << "time: " << duration << ".\n"
+            << "dist: " << static_cast<unsigned>(dist) << ".\n"
+            << "mult: " << std::fixed << dist / 142382641 << ".\n";
 
-  // time: 120.
+  // time: 35.
   // dist: 188465250.
   // mult: 1.323653.
   // 11th Gen Intel(R) Core(TM) i5-11320H @ 3.20GHz

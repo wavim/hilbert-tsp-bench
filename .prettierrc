@@ -1,0 +1,18 @@
+{
+	"useTabs": true,
+	"tabWidth": 8,
+
+	"semi": true,
+	"endOfLine": "auto",
+
+	"trailingComma": "all",
+
+	"printWidth": 100,
+	"proseWrap": "always",
+	"objectWrap": "collapse",
+
+	"quoteProps": "consistent",
+	"singleAttributePerLine": true,
+
+	"overrides": [{ "files": ["*.md"], "options": { "useTabs": false } }]
+}
