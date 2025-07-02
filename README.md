@@ -31,6 +31,6 @@ adding an overhead to the resultant distance, but is usually minor.
 
 Apart from the cycle-tour business that is neglectable, there are some serious drawbacks of the
 algorithm. In particular, it only worked so well on pla85900 because the points are fairly uniform
-in a square-ish region. For oher clusters of different shape and distribution, the algorithm could
-give terrible results. But if we know that a dataset have certain preferable properties prior, the
+in a square-ish region. For other clusters of different shape or distribution, the algorithm could
+give terrible results. But if we know prior that a dataset have certain preferable properties, the
 algorithm could achieve amazing performance and ratio.
