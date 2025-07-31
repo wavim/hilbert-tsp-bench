@@ -1,7 +1,7 @@
 ### Overview
 
 A simple benchmark on how well the
-[Hilbert Curve Sort](https://github.com/CarbonicSoda/hilbert-curve-sort) performs on the TSPLIB
+[Hilbert Curve Sort](https://github.com/wavim/hilbert-curve-sort) performs on the TSPLIB
 dataset in both C++ and JavaScript. Particularly, the famous [pla85900.tsp](pla85900.tsp) set
 containing 85900 nodes.
 
